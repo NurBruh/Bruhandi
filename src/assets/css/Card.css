@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  width: 295px;
+  height: 400px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto Condensed', sans-serif;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+}
+
+.card-image {
+  width: 100%;
+  height: 240px;
+  background-color: #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 12px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+  background-color: #F3F3F3;
+}
+
+.card-price {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #000;
+  margin: 0;
+  order: 1;
+}
+
+.card-name {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  font-weight: 400;
+  order: 2;
+}
+
+.card-btn {
+  margin-top: auto;
+  width: 154px;
+  align-self: flex-start; 
+  padding: 10px 0;
+  background-color: #00963D;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  order: 3;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.card-btn:hover {
+  background-color: #007a30;
+  transform: scale(1.03);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    height: auto;
+  }
+
+  .card-image {
+    height: 200px;
+  }
+
+  .card-btn {
+    width: 100%;
+  }
+}
