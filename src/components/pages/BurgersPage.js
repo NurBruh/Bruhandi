@@ -28,7 +28,6 @@ const BurgersPage = ({ adding }) => {
     setSearchParams(newSearchParams, { replace: true });
   };
 
-  // Загружаем категории один раз при монтировании
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -87,7 +86,6 @@ const BurgersPage = ({ adding }) => {
         return false;
       })
       .map(burger => {
-        // Находим категорию по categoryID
         const category = categories.find(cat => cat.id === burger.categoryID);
         return {
           ...burger,

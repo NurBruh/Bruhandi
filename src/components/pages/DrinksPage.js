@@ -28,7 +28,6 @@ const DrinksPage = ({ adding }) => {
     setSearchParams(newSearchParams, { replace: true });
   };
 
-  // Загружаем категории один раз при монтировании
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -41,7 +40,6 @@ const DrinksPage = ({ adding }) => {
     loadCategories();
   }, []);
 
-  // Загружаем напитки при изменении фильтров
   useEffect(() => {
     const loadDrinks = async () => {
       try {
