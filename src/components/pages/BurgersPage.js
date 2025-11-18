@@ -34,9 +34,18 @@ const BurgersPage = ({ adding }) => {
         setFastfood([]);
         
         let api = 'https://a57e29c422a5fd0e.mokky.dev/burger';
+        const params = [];
         
         if (categoryFilter) {
-          api = `${api}?category=${categoryFilter}`;
+          params.push(`category=${categoryFilter}`);
+        }
+        
+        if (searchFilter) {
+          params.push(`name=*${searchFilter}*`);
+        }
+        
+        if (params.length > 0) {
+          api = `${api}?${params.join('&')}`;
         }
         
         const { data } = await axios.get(api);
@@ -48,31 +57,18 @@ const BurgersPage = ({ adding }) => {
       }
     };
     loadBurgers();
-  }, [categoryFilter]);
+  }, [categoryFilter, searchFilter]);
 
   const processedBurgers = useMemo(() => {
     const uniqueBurgers = new Set();
-    let currentBurgers = fastfood.filter(burger => {
+    return fastfood.filter(burger => {
       if (!uniqueBurgers.has(burger.id)) {
         uniqueBurgers.add(burger.id);
         return true;
       }
       return false;
     });
-
-    if (searchFilter) {
-      const lowercase = searchFilter.toLowerCase().trim();
-      if (lowercase.length === 0) return currentBurgers;
-
-      currentBurgers = currentBurgers.filter(burger => {
-        const name = burger.name.toLowerCase().includes(lowercase);
-        const category = burger.category.toLowerCase().includes(lowercase);
-        return name || category;
-      });
-    }
-
-    return currentBurgers;
-  }, [fastfood, searchFilter]); 
+  }, [fastfood]); 
 
   return (
     <main className="main">

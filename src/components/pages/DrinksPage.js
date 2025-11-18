@@ -34,9 +34,18 @@ const DrinksPage = ({ adding }) => {
         setDrinks([]);
         
         let api = 'https://a57e29c422a5fd0e.mokky.dev/drinks';
+        const params = [];
         
         if (categoryFilter) {
-          api = `${api}?category=${categoryFilter}`;
+          params.push(`category=${categoryFilter}`);
+        }
+        
+        if (searchFilter) {
+          params.push(`name=*${searchFilter}*`);
+        }
+        
+        if (params.length > 0) {
+          api = `${api}?${params.join('&')}`;
         }
         
         const { data } = await axios.get(api);
@@ -48,31 +57,18 @@ const DrinksPage = ({ adding }) => {
       }
     };
     loadDrinks();
-  }, [categoryFilter]);
+  }, [categoryFilter, searchFilter]);
 
   const processedDrinks = useMemo(() => {
     const uniqueDrinks = new Set();
-    let currentDrinks = drinks.filter(drink => {
+    return drinks.filter(drink => {
       if (!uniqueDrinks.has(drink.id)) {
         uniqueDrinks.add(drink.id);
         return true;
       }
       return false;
     });
-
-    if (searchFilter) {
-      const lowercase = searchFilter.toLowerCase().trim();
-      if (lowercase.length === 0) return currentDrinks;
-
-      currentDrinks = currentDrinks.filter(drink => {
-        const name = drink.name.toLowerCase().includes(lowercase);
-        const category = drink.category.toLowerCase().includes(lowercase);
-        return name || category;
-      });
-    }
-
-    return currentDrinks;
-  }, [drinks, searchFilter]);
+  }, [drinks]);
   return (
     <main className="main">
       <section className="main-container">
