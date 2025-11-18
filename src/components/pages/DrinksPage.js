@@ -8,6 +8,7 @@ import '../../assets/css/Main.css';
 const DrinksPage = ({ adding }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [drinks, setDrinks] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [searchItem, setSearchItem] = useState('');
 
@@ -27,6 +28,20 @@ const DrinksPage = ({ adding }) => {
     setSearchParams(newSearchParams, { replace: true });
   };
 
+  // Загружаем категории один раз при монтировании
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const { data } = await axios.get('https://a57e29c422a5fd0e.mokky.dev/categorydrink');
+        setCategories(data);
+      } catch (error) {
+        console.error('Ошибка загрузки категорий:', error);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  // Загружаем напитки при изменении фильтров
   useEffect(() => {
     const loadDrinks = async () => {
       try {
@@ -59,29 +74,40 @@ const DrinksPage = ({ adding }) => {
     loadDrinks();
   }, [categoryFilter, searchFilter]);
 
+  
   const processedDrinks = useMemo(() => {
     const uniqueDrinks = new Set();
-    return drinks.filter(drink => {
-      if (!uniqueDrinks.has(drink.id)) {
-        uniqueDrinks.add(drink.id);
-        return true;
-      }
-      return false;
-    });
-  }, [drinks]);
+    
+    return drinks
+      .filter(drink => {
+        if (!uniqueDrinks.has(drink.id)) {
+          uniqueDrinks.add(drink.id);
+          return true;
+        }
+        return false;
+      })
+      .map(drink => {
+      
+        const category = categories.find(cat => cat.id === drink.categoryID);
+        return {
+          ...drink,
+          categoryName: category ? category.name : 'Без категории'
+        };
+      });
+  }, [drinks, categories]);
   return (
     <main className="main">
       <section className="main-container">
         <h2 className="main-title">Напитки</h2>
-        <form onSubmit={handleSearch} style={{ marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
             placeholder="Поиск напитка..."
             value={searchItem}
             onChange={(e) => setSearchItem(e.target.value)}
-            style={{ padding: '10px 20px', fontSize: '16px', borderRadius: '8px', border: '2px solid #00963D', width: '300px', outline: 'none' }}
+            className="search-input"
           />
-          <button type="submit" style={{ padding: '10px 20px', fontSize: '16px', borderRadius: '8px', backgroundColor: '#ff6f1e', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+          <button type="submit" className="search-button">
             Найти
           </button>
         </form>
@@ -94,7 +120,7 @@ const DrinksPage = ({ adding }) => {
                 <Card key={`${drink.type}-${drink.id}`} eda={drink} qosu={adding} />
               ))
             ) : (
-              <div style={{ textAlign: 'center', padding: '20px', fontSize: '18px', color: '#666' }}>
+              <div className="no-results">
                 По вашему запросу не найдено.
               </div>
             )}

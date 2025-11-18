@@ -59,3 +59,47 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.search-form {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.search-input {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #00963D;
+  width: 300px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #007a30;
+}
+
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #ff6f1e;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #ef5e08;
+}
+
+.no-results {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #666;
+}
