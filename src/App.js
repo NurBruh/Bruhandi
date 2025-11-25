@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './util/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AppRoute from './util/AppRoute';
@@ -26,20 +27,22 @@ function App() {
   const summa = korzina.reduce((sum, x) => sum + Number(x.price) * x.sany, 0);
 
   return (
-    <Router>
-      <div className="App">
-        <Header sany={barligi} />
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Header sany={barligi} />
 
-        <AppRoute 
-          adding={qosu} 
-          list={korzina} 
-          clear={tastau} 
-          summar={summa} 
-        />
+          <AppRoute 
+            adding={qosu} 
+            list={korzina} 
+            clear={tastau} 
+            summar={summa} 
+          />
 
-        <Footer />
-      </div>
-    </Router>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

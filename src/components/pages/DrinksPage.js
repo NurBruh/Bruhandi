@@ -41,26 +41,17 @@ const DrinksPage = ({ adding }) => {
   }, []);
 
   useEffect(() => {
+    let api = 'https://a57e29c422a5fd0e.mokky.dev/drinks';
+
+    if (categoryFilter) {
+      api = `${api}?category=${categoryFilter}`;
+    }
+
+    setLoading(true);
+    setDrinks([]);
+
     const loadDrinks = async () => {
       try {
-        setLoading(true);
-        setDrinks([]);
-        
-        let api = 'https://a57e29c422a5fd0e.mokky.dev/drinks';
-        const params = [];
-        
-        if (categoryFilter) {
-          params.push(`category=${categoryFilter}`);
-        }
-        
-        if (searchFilter) {
-          params.push(`name=*${searchFilter}*`);
-        }
-        
-        if (params.length > 0) {
-          api = `${api}?${params.join('&')}`;
-        }
-        
         const { data } = await axios.get(api);
         setDrinks(data);
       } catch (error) {
@@ -70,29 +61,36 @@ const DrinksPage = ({ adding }) => {
       }
     };
     loadDrinks();
-  }, [categoryFilter, searchFilter]);
+  }, [categoryFilter]);
 
-  
   const processedDrinks = useMemo(() => {
     const uniqueDrinks = new Set();
-    
-    return drinks
-      .filter(drink => {
-        if (!uniqueDrinks.has(drink.id)) {
-          uniqueDrinks.add(drink.id);
-          return true;
-        }
-        return false;
-      })
-      .map(drink => {
-      
-        const category = categories.find(cat => cat.id === drink.categoryID);
-        return {
-          ...drink,
-          categoryName: category ? category.name : 'Без категории'
-        };
-      });
-  }, [drinks, categories]);
+    let currentDrinks = drinks.filter(drink => {
+      if (!uniqueDrinks.has(drink.id)) {
+        uniqueDrinks.add(drink.id);
+        return true;
+      }
+      return false;
+    });
+
+    if (searchFilter) {
+      const lowercase = searchFilter.toLowerCase().trim();
+      if (lowercase.length > 0) {
+        currentDrinks = currentDrinks.filter(drink => {
+          const name = drink.name?.toLowerCase().includes(lowercase);
+          return name;
+        });
+      }
+    }
+
+    return currentDrinks.map(drink => {
+      const category = categories.find(cat => cat.id === drink.categoryID);
+      return {
+        ...drink,
+        categoryName: category ? category.name : 'Без категории'
+      };
+    });
+  }, [drinks, categories, searchFilter]);
   return (
     <main className="main">
       <section className="main-container">

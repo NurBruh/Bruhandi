@@ -4,7 +4,7 @@ import axios from 'axios';
 import Card from '../Card';
 import Loading from '../Loading';
 import '../../assets/css/Main.css';
-
+  
 const BurgersPage = ({ adding }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [fastfood, setFastfood] = useState([]);
@@ -42,26 +42,17 @@ const BurgersPage = ({ adding }) => {
 
   
   useEffect(() => {
+    let api = 'https://a57e29c422a5fd0e.mokky.dev/burger';
+
+    if (categoryFilter) {
+      api = `${api}?category=${categoryFilter}`;
+    }
+
+    setLoading(true);
+    setFastfood([]);
+
     const loadBurgers = async () => {
       try {
-        setLoading(true);
-        setFastfood([]);
-        
-        let api = 'https://a57e29c422a5fd0e.mokky.dev/burger';
-        const params = [];
-        
-        if (categoryFilter) {
-          params.push(`category=${categoryFilter}`);
-        }
-        
-        if (searchFilter) {
-          params.push(`name=*${searchFilter}*`);
-        }
-        
-        if (params.length > 0) {
-          api = `${api}?${params.join('&')}`;
-        }
-        
         const { data } = await axios.get(api);
         setFastfood(data);
       } catch (error) {
@@ -71,28 +62,36 @@ const BurgersPage = ({ adding }) => {
       }
     };
     loadBurgers();
-  }, [categoryFilter, searchFilter]);
+  }, [categoryFilter]);
 
- 
   const processedBurgers = useMemo(() => {
     const uniqueBurgers = new Set();
-    
-    return fastfood
-      .filter(burger => {
-        if (!uniqueBurgers.has(burger.id)) {
-          uniqueBurgers.add(burger.id);
-          return true;
-        }
-        return false;
-      })
-      .map(burger => {
-        const category = categories.find(cat => cat.id === burger.categoryID);
-        return {
-          ...burger,
-          categoryName: category ? category.name : 'Без категории'
-        };
-      });
-  }, [fastfood, categories]); 
+    let currentBurgers = fastfood.filter(burger => {
+      if (!uniqueBurgers.has(burger.id)) {
+        uniqueBurgers.add(burger.id);
+        return true;
+      }
+      return false;
+    });
+
+    if (searchFilter) {
+      const lowercase = searchFilter.toLowerCase().trim();
+      if (lowercase.length > 0) {
+        currentBurgers = currentBurgers.filter(burger => {
+          const name = burger.name?.toLowerCase().includes(lowercase);
+          return name;
+        });
+      }
+    }
+
+    return currentBurgers.map(burger => {
+      const category = categories.find(cat => cat.id === burger.categoryID);
+      return {
+        ...burger,
+        categoryName: category ? category.name : 'Без категории'
+      };
+    });
+  }, [fastfood, categories, searchFilter]); 
 
   return (
     <main className="main">

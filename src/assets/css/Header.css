@@ -41,10 +41,12 @@
   display: flex;
   align-items: center;
   height: 35px;
+  gap: 12px;
+  flex-wrap: nowrap;
 }
 
 .header-nav-width {
-  width: 343px;
+  min-width: 343px;
   justify-content: space-between;
 }
 
@@ -57,6 +59,10 @@
   display: inline-flex;
   align-items: center;
   border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 .header-link:hover {
@@ -97,6 +103,28 @@
   position: absolute;
   top: -6px;
   right: -8px;
+}
+
+.header-logout-btn {
+  background-color: #ff6f1e;
+  color: white;
+  border: none;
+  padding: 0 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  font-family: 'Roboto Condensed', sans-serif;
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.header-logout-btn:hover {
+  background-color: #ef5e08;
 }
 
 @media (max-width: 768px) {
