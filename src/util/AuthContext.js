@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password, username) => {
     try {
-      const response = await fetch('https://a57e29c422a5fd0e.mokky.dev/register', {
+      const response = await fetch('http://localhost:1488/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, username })
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('https://a57e29c422a5fd0e.mokky.dev/auth', {
+      const response = await fetch('http://localhost:1488/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
