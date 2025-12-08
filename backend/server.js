@@ -20,32 +20,23 @@ app.post('/api/register', (req, res) => {
         if (!req.body || !req.body.email || !req.body.password || !req.body.username) {
             return res.status(400).json({ message: 'Email, парол и username обязательны' });
         }
-
         const { email, password, username } = req.body;
-
-
         if (users.find(u => u.email === email)) {
             return res.status(409).json({ message: 'User uzhe est nashalnika' });
         }
-
-
         const newUser = {
             id: users.length + 1,
             email: email,
             password: password,
-            username: username || email.split('@')[0]
+            username: username
         };
-
         users.push(newUser);
         
-
-
         const token = jwt.sign(
             { id: newUser.id, username: newUser.username, email: newUser.email },
             JWT_TOKEN,
             { expiresIn: '30m' }
         );
-
         res.status(201).json({
             message: 'User uspeshno sozdan',
             token: token,
